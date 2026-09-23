@@ -6,6 +6,18 @@
 
 ---
 
+## 🎥 Demo Video
+
+[![QueryPilot Video Demo](screenshot/chat.png)](demo_video.mp4)
+
+> 📹 **Walkthrough Highlights in `demo_video.mp4`:**
+> 1. **Multi-File Dataset Upload**: Drag-and-drop CSV & Excel workbooks with automatic merged-header detection.
+> 2. **Natural Language Q&A**: Live DuckDB SQL generation, execution latencies, and interactive Plotly visualizations.
+> 3. **Statistical Anomaly Detection**: Explaining IQR bounds, standard deviations, and business rationales.
+> 4. **Auto-Dashboards & Data Quality**: Executive KPI scorecards, 0–100 health audits, and time-series forecasting.
+
+---
+
 ## 📸 Application Screenshots
 
 ### 1. Conversational AI Analyst & SQL Generation

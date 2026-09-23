@@ -13,6 +13,8 @@ import time
 
 import pandas as pd
 
+import re
+
 from . import charts, config
 from .anomalies import analyse_dataframe
 from .engine import DataEngine
@@ -22,6 +24,19 @@ def _fmt(v) -> str:
     if v is None:
         return ""
     return str(v)
+
+
+def _sanitize_duckdb_sql(query: str) -> str:
+    """Auto-fix common LLM SQL syntax mistakes for DuckDB (e.g. reversed strftime or uncast dates)."""
+    q = query
+    # 1. Fix reversed strftime('%Y-%m', col) -> strftime(TRY_CAST(col AS DATE), '%Y-%m')
+    p1 = re.compile(r"strftime\s*\(\s*(['\"][^'\"]*?%[^'\"]*?['\"])\s*,\s*([a-zA-Z0-9_\.\"]+)\s*\)", re.IGNORECASE)
+    q = p1.sub(r"strftime(TRY_CAST(\2 AS DATE), \1)", q)
+
+    # 2. Fix uncast strftime(col, '%Y-%m') -> strftime(TRY_CAST(col AS DATE), '%Y-%m')
+    p2 = re.compile(r"strftime\s*\(\s*(?!(?:TRY_CAST|CAST)\()([a-zA-Z0-9_\.\"]+)\s*,\s*(['\"][^'\"]+['\"])\s*\)", re.IGNORECASE)
+    q = p2.sub(r"strftime(TRY_CAST(\1 AS DATE), \2)", q)
+    return q
 
 
 def md_table(columns: list[str], rows: list[list]) -> str:
@@ -43,15 +58,16 @@ class ToolBox:
     # ------------------------------------------------------------------ tools
     def run_sql(self, query: str) -> dict:
         started = time.time()
+        clean_query = _sanitize_duckdb_sql(query)
         try:
-            df = self.engine.execute(query)
+            df = self.engine.execute(clean_query)
         except Exception as e:  # surfaced to the LLM for self-correction
             return {"ok": False, "error": f"{type(e).__name__}: {e}"}
         n = len(df)
         head = df.head(config.MAX_ROWS_TO_LLM)
         payload = {
             "ok": True,
-            "sql": query,
+            "sql": clean_query,
             "row_count": n,
             "columns": [str(c) for c in df.columns],
             "rows": head.astype(object).where(pd.notnull(head), None).values.tolist(),
