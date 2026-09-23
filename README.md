@@ -6,6 +6,64 @@
 
 ---
 
+## 📸 Application Screenshots
+
+### 1. Conversational AI Analyst & SQL Generation
+Ask business questions in natural language. QueryPilot writes strict DuckDB SQL, streams real-time reasoning, and explains statistical anomalies with outlier boundaries and sample flagged records.
+
+![Conversational SQL Chat](screenshot/chat.png)
+
+---
+
+### 2. Interactive Charts & Visualizations
+Automatic generation of interactive Plotly charts (Bar, Line, Area, Scatter, Pie, Donut) directly within the chat conversation stream.
+
+![Interactive Charts](screenshot/chat%20graph.png)
+
+---
+
+### 3. Auto-Generated Executive Dashboard
+Instant auto-generated KPI scorecards and visual breakdown charts with smart measure classification (differentiating quantitative measures from postal/ID codes).
+
+![Executive Dashboard](screenshot/dashboard.png)
+
+---
+
+### 4. Time-Series Forecasting & Trend Projections
+Historical linear regression with 95% confidence projection bands, zero-floor bounds for non-negative metrics, and dynamic date/metric dropdown switchers.
+
+![Time-Series Forecasting](screenshot/forecasting.png)
+
+---
+
+### 5. Data Quality & Health Scorecard
+Comprehensive data quality audit calculating a 0–100 health score, completeness %, uniqueness %, missing cell counts, and >3σ outlier matrices with actionable recommendations.
+
+![Data Quality Scorecard](screenshot/data%20quality.png)
+
+---
+
+### 6. Interactive Spreadsheet Grid (Tabulator)
+Excel-like virtualized data grid with instant search across all columns, customizable row pagination (25–500 rows), and one-click CSV export.
+
+![Spreadsheet Grid](screenshot/spreadsheet.png)
+
+---
+
+### 7. Multi-File Dataset Upload & Management
+Drag-and-drop or browse `.csv`, `.xlsx`, and `.xls` files with multi-sheet workbook support and instant schema extraction.
+
+![Multi-File Upload](screenshot/upload.png)
+
+---
+
+### 8. Welcome Screen & In-Memory DuckDB Engine
+Overview dashboard highlighting zero-latency in-process DuckDB views, multi-provider AI model switching, and sample dataset exploration.
+
+![Welcome Screen](screenshot/home.png)
+
+---
+
 ## 📋 Requirements & Feature Coverage
 
 ### 1. Core Features
@@ -195,6 +253,15 @@ querypilot/
 │       ├── plotly.min.js     # Vendored Plotly.js charting library
 │       ├── tabulator.min.js  # Vendored Tabulator interactive spreadsheet grid
 │       └── tabulator.min.css # Tabulator styling
+├── screenshot/               # High-resolution screenshots of all application views
+│   ├── chat.png
+│   ├── chat graph.png
+│   ├── dashboard.png
+│   ├── data quality.png
+│   ├── forecasting.png
+│   ├── home.png
+│   ├── spreadsheet.png
+│   └── upload.png
 ├── data/
 │   ├── sales.csv             # Bundled Indian retail sales dataset with planted anomalies
 │   └── make_sample_dataset.py# Script to generate sample datasets
