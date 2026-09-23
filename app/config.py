@@ -14,7 +14,7 @@ try:
 except ImportError:
     pass
 
-LLM_PROVIDER = os.getenv("LLM_PROVIDER", "").strip().lower()  # "gemini", "openrouter", or auto
+LLM_PROVIDER = os.getenv("LLM_PROVIDER", "openrouter").strip().lower()  # default to "openrouter"
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "").strip()
 GEMINI_MODEL = os.getenv("GEMINI_MODEL", "gemini-3.6-flash").strip()
 
@@ -32,22 +32,22 @@ for _d in (UPLOAD_DIR, EXPORT_DIR):
 
 
 def mode() -> str:
-    """'gemini' or 'openrouter' when configured, otherwise 'demo'."""
+    """'openrouter' or 'gemini' when configured, otherwise 'demo'."""
     if LLM_PROVIDER == "openrouter" and OPENROUTER_API_KEY:
         return "openrouter"
     if LLM_PROVIDER == "gemini" and GEMINI_API_KEY:
         return "gemini"
-    if GEMINI_API_KEY:
-        return "gemini"
     if OPENROUTER_API_KEY:
         return "openrouter"
+    if GEMINI_API_KEY:
+        return "gemini"
     return "demo"
 
 
 def active_model() -> str:
     m = mode()
-    if m == "gemini":
-        return GEMINI_MODEL
     if m == "openrouter":
         return OPENROUTER_MODEL
+    if m == "gemini":
+        return GEMINI_MODEL
     return "offline-demo"

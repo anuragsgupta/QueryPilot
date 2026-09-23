@@ -411,7 +411,7 @@ function switchTab(view) {
 }
 
 /* ------------------------------------------------------------------ API Modal */
-let modalSelectedProvider = "gemini";
+let modalSelectedProvider = "openrouter";
 
 function openApiModal() {
   modalSelectedProvider = state.mode;

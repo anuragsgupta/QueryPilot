@@ -10,7 +10,7 @@ client = TestClient(app)
 SAMPLE = "data/sales.csv"
 
 demo_only = pytest.mark.skipif(
-    config.mode() == "gemini",
+    config.mode() != "demo",
     reason="these assertions assume the offline demo agent",
 )
 
@@ -22,7 +22,7 @@ def _events(text):
 def test_health():
     r = client.get("/api/health")
     assert r.status_code == 200
-    assert r.json()["mode"] in ("demo", "gemini")
+    assert r.json()["mode"] in ("demo", "gemini", "openrouter")
 
 
 def test_upload_rejects_non_csv():
