@@ -5,7 +5,7 @@
   # Directory to deploy (contains index.html, css/, js/, and vendor/ assets)
   publish = "frontend"
 
-# Environment variables defaults (override in Netlify Dashboard: Site configuration > Environment variables)
+# Environment variables defaults
 [build.environment]
   PYTHON_VERSION = "3.12"
 
@@ -32,14 +32,6 @@
   for = "/js/*"
   [headers.values]
     Cache-Control = "public, max-age=86400"
-
-# API Proxy Rule (Proxy /api/* to your FastAPI backend service e.g. on Render, Railway, Fly.io, or AWS)
-# You can define BACKEND_URL in Netlify Site Environment Variables
-[[redirects]]
-  from = "/api/*"
-  to = "https://querypilot-api.onrender.com/api/:splat"
-  status = 200
-  force = false
 
 # SPA fallback rule for single-page routing
 [[redirects]]

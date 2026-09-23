@@ -29,6 +29,17 @@ const EXAMPLES = [
 
 const LS_SESSION_KEY = "querypilot_session_v3";
 const LS_PREVIEW_PREFIX = "querypilot_prev_v3_";
+const LS_API_BASE_KEY = "querypilot_api_base_v1";
+
+function getApiBase() {
+  return (localStorage.getItem(LS_API_BASE_KEY) || window.QUERYPILOT_API_BASE || "").trim();
+}
+
+function getApiUrl(endpoint) {
+  const base = getApiBase().replace(/\/+$/, "");
+  const cleanEndpoint = endpoint.startsWith("/") ? endpoint : "/" + endpoint;
+  return base ? base + cleanEndpoint : cleanEndpoint;
+}
 
 /* ------------------------------------------------------------------ utils */
 function escapeHtml(s) {
@@ -208,7 +219,7 @@ async function init() {
 
 async function fetchHealthAndConfig() {
   try {
-    const r = await fetch("/api/config");
+    const r = await fetch(getApiUrl("/api/config"));
     if (r.ok) {
       state.configData = await r.json();
       if (!state.mode || state.mode === "demo") state.mode = state.configData.active_provider;
@@ -405,6 +416,8 @@ let modalSelectedProvider = "gemini";
 function openApiModal() {
   modalSelectedProvider = state.mode;
   selectModalProvider(modalSelectedProvider);
+  const inputApiBase = $("#input-api-base");
+  if (inputApiBase) inputApiBase.value = getApiBase();
   const modal = $("#modal-api-switch");
   modal.style.display = "flex";
   modal.classList.remove("hidden");
@@ -472,6 +485,11 @@ async function applyApiModal() {
   const prov = modalSelectedProvider;
   const model = $("#input-model").value.trim();
   const apiKey = $("#input-api-key").value.trim();
+  const apiBase = $("#input-api-base") ? $("#input-api-base").value.trim() : "";
+
+  try {
+    localStorage.setItem(LS_API_BASE_KEY, apiBase);
+  } catch (e) {}
 
   const payload = {
     provider: prov,
@@ -496,6 +514,9 @@ async function applyApiModal() {
       updateModePill();
       closeApiModal();
       toast(`Switched to ${res.mode.toUpperCase()} (${res.model})`);
+    } else {
+      closeApiModal();
+      if (apiBase) toast(`Saved Backend URL: ${apiBase}`);
     }
   } catch (e) {
     toast("Error switching config: " + e.message, "warn");
@@ -505,15 +526,16 @@ async function applyApiModal() {
 /* ------------------------------------------------------------------ API */
 async function api(url, opts) {
   try {
-    const r = await fetch(url, opts);
+    const fullUrl = getApiUrl(url);
+    const r = await fetch(fullUrl, opts);
     if (!r.ok) {
       const e = await r.json().catch(() => ({ detail: r.statusText }));
-      toast(e.detail || "Request failed", "warn");
+      toast(e.detail || `Request failed (${r.status})`, "warn");
       return null;
     }
     return await r.json();
   } catch (e) {
-    toast("Network error: " + e.message, "warn");
+    toast(`Network error: ${e.message}. Set Backend API URL in ⚙️ Settings if hosted remotely.`, "warn");
     return null;
   }
 }
@@ -1262,7 +1284,7 @@ async function send(text) {
   msg.setStatus("Thinking…");
 
   try {
-    const res = await fetch("/api/chat", {
+    const res = await fetch(getApiUrl("/api/chat"), {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({

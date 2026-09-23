@@ -348,6 +348,13 @@
           <input type="password" id="input-api-key" class="form-input" placeholder="Leave empty to use configured key" />
           <div class="form-tip" id="api-key-status"></div>
         </div>
+
+        <!-- Backend Server URL input for Netlify / Remote deployments -->
+        <div class="form-group" id="group-api-base" style="margin-top:6px;padding-top:10px;border-top:1px dashed var(--border-soft);">
+          <label class="form-label" for="input-api-base">Backend API Server URL (for Netlify / Remote Deployments)</label>
+          <input type="text" id="input-api-base" class="form-input" placeholder="e.g. https://your-querypilot-api.onrender.com (or leave blank for /api)" />
+          <div class="form-tip">Leave blank when running locally with FastAPI on port 8000.</div>
+        </div>
       </div>
     </div>
 

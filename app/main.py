@@ -16,6 +16,8 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.responses import StreamingResponse
 from pydantic import BaseModel
 
+from fastapi.middleware.cors import CORSMiddleware
+
 from . import analytics, config
 from .agent import GeminiAgent
 from .demo_agent import DemoAgent
@@ -24,6 +26,14 @@ from .openrouter_agent import OpenRouterAgent
 
 app = FastAPI(title="QueryPilot", version="1.0.0",
               description="An AI data analyst you can talk to.")
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 sessions: dict[str, dict] = {}
 
