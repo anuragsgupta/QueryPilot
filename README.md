@@ -44,6 +44,15 @@ uvicorn app.main:app --reload
 
 Open **http://localhost:8000** in your browser, click **“Load sample dataset”** or upload your own CSV/Excel file, and start exploring!
 
+### Netlify Deployment
+
+QueryPilot includes a pre-configured `netlify.toml` file ready for one-click deployment:
+1. Push your repository to GitHub: `https://github.com/anuragsgupta/QueryPilot`
+2. In [Netlify Dashboard](https://app.netlify.com), click **Add new site > Import an existing project**.
+3. Select your `QueryPilot` repository.
+4. Netlify automatically detects `netlify.toml` (`publish = "frontend"`).
+5. Set your backend URL or proxy target in `netlify.toml` / Netlify site redirects.
+
 ---
 
 ## Architecture
